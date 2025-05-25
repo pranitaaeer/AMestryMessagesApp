@@ -2,6 +2,7 @@ import { sendVerificationEmail } from "@/app/helpers/SendVerificationEmail";
 import dbConnect from "@/app/lib/DbConnect";
 import UserModel from "@/app/models/User.model";
 import bcrypt from "bcryptjs"
+
 export async function POST(request:Request) {
     await dbConnect()
     try {
@@ -51,7 +52,7 @@ export async function POST(request:Request) {
     //send verification email
     const response=await sendVerificationEmail(username,email,verifyCode)
     if(!response.success){
-      return Response.json({success:false,message:"error in email verification user"},{status:500})
+      return Response.json({success:false,message:"error in email verification of user"},{status:500})
     }
     return Response.json({success:true,message:"user signup successfully"},{status:500})
     } catch (error) {
