@@ -3,6 +3,7 @@ import dbConnect from "@/app/lib/DbConnect";
 import UserModel from "@/app/models/User.model";
 import bcrypt from "bcryptjs"
 
+
 export async function POST(request:Request) {
     await dbConnect()
     try {
@@ -54,7 +55,7 @@ export async function POST(request:Request) {
     if(!response.success){
       return Response.json({success:false,message:"error in email verification of user"},{status:500})
     }
-    return Response.json({success:true,message:"user signup successfully"},{status:500})
+    return Response.json({success:true,message:"user signup successfully"},{status:200})
     } catch (error) {
         console.error("error in signup user",error)
         return Response.json({success:false,message:"error in signup user"},{status:500})

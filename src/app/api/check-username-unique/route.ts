@@ -15,10 +15,10 @@ export async function GET(request:Request) {
         }
         const result=usernameQuerySchema.safeParse(queryParams)
         if(result.error){
-            const usernameError=result.error?.format().username?.errors || []
+            const usernameError=result.error.format().username?._errors || []
             return Response.json({
                 success:false,
-                message:usernameError.length>0? usernameError:"invalid username"
+                message:usernameError.length>0? usernameError.join(', '):"invalid username"
             },{status:400})
         }
         const {username}=result.data
@@ -32,7 +32,7 @@ export async function GET(request:Request) {
         return Response.json({
                 success:true,
                 message:"username is unique"
-            },{status:400})
+            },{status:200})
 
     } catch (error) {
         console.error("error in checking username",error)
