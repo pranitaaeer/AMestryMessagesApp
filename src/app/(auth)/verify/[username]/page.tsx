@@ -34,10 +34,11 @@ const Page = () => {
   async function onSubmit(data: z.infer<typeof verifyCodeSchema>) {
     setIsSubmiting(true)
     try {
-      const response = await axios.post('/api/verify-user', {
+      const response = await axios.post(`/api/verify-user`, {
         username: Params.username,
         code: data.code
       })
+      console.log("username:",Params.username)
       toast({
         title: "Verify user",
         description: response.data.message

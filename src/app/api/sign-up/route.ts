@@ -52,10 +52,12 @@ export async function POST(request:Request) {
     }
     //send verification email
     const response=await sendVerificationEmail(username,email,verifyCode)
+
     if(!response.success){
       return Response.json({success:false,message:"error in email verification of user"},{status:500})
     }
-    return Response.json({success:true,message:"user signup successfully"},{status:200})
+    const user=await UserModel.findOne({username})
+    return Response.json({success:true,message:"user signup successfully",messages:user},{status:200})
     } catch (error) {
         console.error("error in signup user",error)
         return Response.json({success:false,message:"error in signup user"},{status:500})

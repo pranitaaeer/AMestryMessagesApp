@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import {NextAuthOptions} from "next-auth"
 import dbConnect from "@/app/lib/DbConnect";
@@ -17,9 +18,12 @@ export const authOptions:NextAuthOptions={
     async authorize(credentials:any):Promise<any> {
      try {
         await dbConnect()
-        const user=await UserModel.findOne({email:credentials.identifiers})
+        const user=await UserModel.findOne({ $or: [{ email: credentials.identifiers }, { username: credentials.identifiers }] })
         if(!user){
            throw new Error("user not found")
+        }
+        if(!user.isVerified){
+          throw new Error("please verify your account")
         }
         const isCorrectPassword=await bcrypt.compare(credentials.password,user.password)
         if(!isCorrectPassword){
@@ -36,7 +40,7 @@ export const authOptions:NextAuthOptions={
 callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token._id = user._id?.toString(),
+        token._id = user._id?.toString()
         token.username=user.username
         token.isVerified=user.isVerified
         token.isAcceptingMessages=user.isAcceptingMessages
