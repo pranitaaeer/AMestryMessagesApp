@@ -6,7 +6,8 @@ export async function POST(request:Request) {
     await dbConnect()
     try {
         const {username,content}=await request.json()
-        const user=await UserModel.findOne({username})
+        const decodedUsername=decodeURIComponent(username)
+        const user=await UserModel.findOne({username:decodedUsername})
         if(!user){
         return Response.json({success:false,message:"user not found"},{status:404})
         }

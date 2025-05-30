@@ -78,7 +78,7 @@ const Page = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={isSubmiting} className="w-full">
+              <Button type="submit" disabled={isSubmiting} className="w-full bg-purple-800 text-white rounded-md">
               {isSubmiting ? "Verifying..." : "Verify"}
             </Button>
           </form>

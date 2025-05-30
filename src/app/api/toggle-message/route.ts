@@ -29,7 +29,7 @@ export async function POST(request:Request) {
         return Response.json({success:false,message:"error in toggle message"},{status:500})
     }
 }
-export async function GET(request:Request) {
+export async function GET() {
     await dbConnect()
     try {
         const session= await getServerSession(authOptions)

@@ -20,9 +20,9 @@ export async function GET() {
             {$match:{id:userId}},
             {$unwind:'$messages'},
             {$sort:{'messages.createdAt':-1}},
-            {$group:{_id:'$_id',messages:{$push:'messages'}}}
+            {$group:{_id:'$_id',messages:{$push:'$messages'}}}
         ])
-        if(!getuserMessages || getuserMessages.length<0){
+        if(!getuserMessages || getuserMessages.length===0){
         return Response.json({success:false,message:"no messages found"},{status:404})
         }
 
