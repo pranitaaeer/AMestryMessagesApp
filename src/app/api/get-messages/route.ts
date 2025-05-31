@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {getServerSession} from "next-auth"
 import {User} from "next-auth"
 import dbConnect from "@/app/lib/DbConnect"
@@ -6,7 +7,7 @@ import { authOptions } from "../auth/[...nextauth]/options"
 import mongoose from "mongoose"
 
 
-export async function GET() {
+export async function GET(request:Request) {
     await dbConnect()
     try {
         const session= await getServerSession(authOptions)
@@ -17,7 +18,7 @@ export async function GET() {
         }
         const userId= new mongoose.Types.ObjectId(user._id)
         const getuserMessages=await UserModel.aggregate([
-            {$match:{id:userId}},
+            {$match:{_id:userId}},
             {$unwind:'$messages'},
             {$sort:{'messages.createdAt':-1}},
             {$group:{_id:'$_id',messages:{$push:'$messages'}}}

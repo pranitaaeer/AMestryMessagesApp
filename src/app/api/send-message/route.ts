@@ -11,6 +11,12 @@ export async function POST(request:Request) {
         if(!user){
         return Response.json({success:false,message:"user not found"},{status:404})
         }
+        if (!user.isAcceptingMessages) {
+          return Response.json(
+            { message: 'User is not accepting messages', success: false },
+            { status: 403 } // 403 Forbidden status
+          );
+        }
         const newMessage={content,createdAt:new Date()}
         user.messages.push(newMessage as Message)
         await user.save()
@@ -21,3 +27,4 @@ export async function POST(request:Request) {
         return Response.json({success:false,message:"error in sending message"},{status:500})
     }
 }
+
