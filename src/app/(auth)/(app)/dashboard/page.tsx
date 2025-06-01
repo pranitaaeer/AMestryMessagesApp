@@ -14,7 +14,7 @@ import MessageCard from '@/components/MessageCard'
 import { Switch } from "@/components/ui/switch"
 import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
-import { Loader2, Copy} from "lucide-react"
+import { Loader2, Copy } from "lucide-react"
 
 const Page = () => {
   const [messages, setMessages] = useState<Message[]>([])
@@ -27,7 +27,7 @@ const Page = () => {
     resolver: zodResolver(isAcceptingMessagesSchema),
     defaultValues: { isAcceptingMessages: true }
   })
-  const { register,watch, setValue } = form
+  const { watch, setValue } = form
   const isAcceptingMessages = watch('isAcceptingMessages')
 
   // Fetch Accepting Messages Status
@@ -47,18 +47,16 @@ const Page = () => {
   // Fetch Messages
   const fetchMessages = useCallback(async () => {
     setIsLoading(true)
-    setIsSwitching(false)
     try {
-      const  response  = await axios.get<ApiResponse>('/api/get-messages')
+      const response = await axios.get<ApiResponse>('/api/get-messages')
       setMessages(response.data.messages || [])
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>
       toast({ description: axiosError.message })
     } finally {
       setIsLoading(false)
-      setIsSwitching(false)
     }
-  }, [toast])
+  }, [toast, setMessages, setIsLoading])
 
   // Toggle Accepting Messages
   const toggleMessage = async () => {
@@ -68,7 +66,7 @@ const Page = () => {
         isAcceptingMessages: !isAcceptingMessages
       })
       setValue('isAcceptingMessages', !isAcceptingMessages)
-      toast({ description:response.data.message })
+      toast({ description: response.data.message })
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>
       toast({ description: axiosError.message })
@@ -97,11 +95,11 @@ const Page = () => {
     if (!session || !session?.user) return
     fetchAcceptMessage()
     fetchMessages()
-  }, [fetchAcceptMessage, fetchMessages, session])
+  }, [fetchAcceptMessage, fetchMessages, session, setValue, toast])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 px-4 py-8">
-      <div className="max-w-2xl mx-auto bg-white/90 rounded-xl shadow-xl p-6 border border-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 px-2 py-4 md:px-6 md:py-8">
+      <div className="w-full max-w-7xl mx-auto bg-white/90 rounded-xl shadow-xl p-2 md:p-6 border border-gray-100">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
           <div>
             <h2 className="text-2xl font-bold text-primary mb-1">Dashboard</h2>
@@ -110,23 +108,17 @@ const Page = () => {
           <div className="flex items-center gap-2">
             <span className="text-sm">Accepting Messages</span>
             <Switch
-              {...register('isAcceptingMessages')}
               checked={isAcceptingMessages}
               onCheckedChange={toggleMessage}
-              className="data-[state=checked]:bg-purple-600 data-[state=unchecked]:bg-purple-950"
+              className="bg-gray-200 dark:bg-zinc-800 border border-purple-600 data-[state=checked]:bg-purple-600 data-[state=unchecked]:bg-gray-300"
+              disabled={isSwitching}
             />
-            <style jsx>{`[data-state='checked'] >
-              div{background-color:"black";}
-              [data-state='unchecked'] >
-              div{
-              background-color:'black';}
-              `} </style>
             {isSwitching && <Loader2 className="animate-spin h-4 w-4 ml-2 text-primary" />}
           </div>
         </div>
         <Separator className="mb-6" />
         <div className="flex items-center gap-2 mb-8 border-gray-700 ml-4 w-full">
-          <span className="truncate text-sm bg-gray-700 px-2 py-1 rounded">{profileUrl}</span>
+          <span className="truncate text-sm bg-gray-700 text-white px-2 py-1 rounded">{profileUrl}</span>
           <Button size="icon" variant="outline" onClick={copyToClipBoard} disabled={!profileUrl}>
             <Copy className="h-4 w-4" />
           </Button>
@@ -141,8 +133,15 @@ const Page = () => {
               No messages yet.
             </div>
           ) : (
-            <div className="space-y-4">
-              {messages.map((message,) => (
+            <div
+              className="
+                grid grid-cols-1
+                sm:grid-cols-2
+                lg:grid-cols-3
+                gap-6
+              "
+            >
+              {messages.map((message) => (
                 <MessageCard
                   key={message._id as string}
                   message={message}
