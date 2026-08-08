@@ -8,6 +8,7 @@ export async function POST(request:Request) {
     await dbConnect()
     try {
     const {username,email,password}=await request.json()
+
     const userwithUsername=await UserModel.findOne({username,isVerified:true})
     if(userwithUsername){
          return Response.json({
@@ -15,8 +16,11 @@ export async function POST(request:Request) {
                 message:"user is already exist with this username"
             },{status:400})
     }
+
     const userwithEmail=await UserModel.findOne({email})
+
     const verifyCode=Math.floor(100000+Math.random()*900000).toString()
+
     if(userwithEmail){
         if(userwithEmail.isVerified){
             return Response.json({
@@ -33,6 +37,7 @@ export async function POST(request:Request) {
            await userwithEmail.save()
         }
     }
+
     else{
       const hashedPssword=await bcrypt.hash(password,10)
            const expiryDate=new Date()
@@ -43,7 +48,7 @@ export async function POST(request:Request) {
             email,
             password: hashedPssword,
             verifyCode: verifyCode,
-            verifyCodeExpires: expiryDate,
+            verifyCodeExpiry: expiryDate,
             isVerified: false,
             isAcceptingMessages: true,
             messages:[]
@@ -56,8 +61,11 @@ export async function POST(request:Request) {
     if(!response.success){
       return Response.json({success:false,message:"error in email verification of user"},{status:500})
     }
+
     const user=await UserModel.findOne({username})
+
     return Response.json({success:true,message:"user signup successfully",messages:user},{status:200})
+
     } catch (error) {
         console.error("error in signup user",error)
         return Response.json({success:false,message:"error in signup user"},{status:500})

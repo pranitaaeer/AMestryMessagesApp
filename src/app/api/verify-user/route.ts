@@ -13,13 +13,14 @@ export async function POST(request:Request) {
         if(!user){
             return Response.json({success:false,message:"user not found"},{status:404})
         }
-        const isCodeCorrect=user.verifyCode=== code
-        const expiry=new Date(user.verifyCodeExpiry) > new Date()
+        const isCodeCorrect=user!.verifyCode=== code
+        const expiry=new Date(user!.verifyCodeExpiry) > new Date()
 
         if(!isCodeCorrect){
             return Response.json({success:false,message:"incorrect otp"},{status:401})
         }
         if(!expiry){
+            console.log("otp expired")
             return Response.json({success:false,message:"your otp is expired ,please sign in again"},{status:404})
         }
         user.isVerified=true
