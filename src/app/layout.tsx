@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-// @ts-expect-error
+// @ts-expect-error - CSS global style import bypass for Next.js layout configuration
 import "./globals.css";
 import React from "react";
 import { Toaster } from "@/components/ui/toaster"
