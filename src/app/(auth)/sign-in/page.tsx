@@ -238,7 +238,7 @@ const Page = () => {
             ========================== */}
             <div className="mt-7 text-center">
               <p className="text-sm text-slate-500">
-                Don't have an account?{" "}
+                Don &apos;t have an account?{" "}
                 <Link
                   href="/sign-up"
                   className="font-semibold text-purple-400 transition-colors hover:text-purple-300"

@@ -1,6 +1,5 @@
 
 "use client"
-
 import React, { useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
 
@@ -18,7 +17,8 @@ import data from "./data.json"
 const Home = () => {
   const { data: session } = useSession()
   const user = session?.user
-
+  
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [emblaApi, setEmblaApi] = useState<any>(null)
 
   // Autoplay
